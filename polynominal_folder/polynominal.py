@@ -57,13 +57,4 @@ class Polynominal:
 
 
 if __name__ == "__main__":
-    # print(Polynominal([])._str_())
-    # print(Polynominal([(0, -8)])._str_())
-    # print(Polynominal([(0, -4), (1, -2)])._str_())
-    # print(Polynominal([(1, 5), (3, 2), (5, -1)])._str_())
-    # print(Polynominal([(4, 2), (6, 3), (2, 3), (0, 7)])._str_())
-    # print(Polynominal([])._str_())
-    # print(Polynominal([(4, 2), (6, 3), (2, 3), (0, 7)]).degree())
-    # print(Polynominal([(4, 1), (6, 5), (2, 3), (11, 7)]).degree())
-    # print(Polynominal([(0, 2)]).degree())
     pass
