@@ -3,23 +3,27 @@ import pytest
 
 
 def test_Polynominal_str_normal1():
-    assert (Polynominal([])._str_()) == "0"
+    assert str(Polynominal([])) == "0"
+
+
+def test_Polynominal_str_normal_empty():
+    assert str(Polynominal()) == "0"
 
 
 def test_Polynominal_str_normal2():
-    assert (Polynominal([(0, -8)])._str_()) == "-8"
+    assert str(Polynominal([(0, -8)])) == "-8"
 
 
 def test_Polynominal_str_normal3():
-    assert (Polynominal([(0, -4), (1, -2)])._str_()) == "-2x-4"
+    assert str(Polynominal([(0, -4), (1, -2)])) == "-2x-4"
 
 
 def test_Polynominal_str_normal4():
-    assert (Polynominal([(1, 5), (3, 2), (5, -1)])._str_()) == "-x^5+2x^3+5x"
+    assert str(Polynominal([(1, 5), (3, 2), (5, -1)])) == "-x^5+2x^3+5x"
 
 
 def test_Polynominal_str_normal5():
-    assert (Polynominal([(4, 2), (7, 3), (2, 3), (0, 7)])._str_()) == "3x^7+2x^4+3x^2+7"
+    assert str(Polynominal([(4, 2), (7, 3), (2, 3), (0, 7)])) == "3x^7+2x^4+3x^2+7"
 
 
 def test_Polynominal_errors1():
@@ -54,15 +58,56 @@ def test_Polynominal_deg_normal_3():
 
 
 def test_Polynominal_value1():
-    assert (Polynominal([(0, 2), (5, 2), (4, 3)]).value(10)) == 30502
-    assert (Polynominal([(0, 2), (5, 2), (4, 3)]).value(5)) == 2002
-    assert (Polynominal([(0, 2), (5, 2), (4, 3)]).value(2)) == 70
-    assert (Polynominal([(0, 2), (5, 2), (4, 3)]).value(1)) == 10
+    assert (Polynominal([(0, 2), (5, 2), (4, 3)]).value(10)) == 230002
+    assert (Polynominal([(0, 2), (5, 2), (4, 3)]).value(5)) == 8127
+    assert (Polynominal([(0, 2), (5, 2), (4, 3)]).value(2)) == 114
+    assert (Polynominal([(0, 2), (5, 2), (4, 3)]).value(1)) == 7
     assert (Polynominal([(0, 2), (5, 2), (4, 3)]).value(0)) == 2
 
 
 def test_Polynominal_value2():
-    assert (Polynominal([(0, 2), (5, 2), (4, 3)]).value(-1)) == 10
+    assert (Polynominal([(0, 2), (5, 2), (4, 3)]).value(-1)) == 3
     assert (Polynominal([(0, 2), (2, 5), (4, 3)]).value(-5)) == 2002
     assert (Polynominal([(0, 2), (3, 5), (6, 3)]).value(5)) == 47502
     assert (Polynominal([(0, 2), (3, 5), (6, 3)]).value(-5)) == 46252
+
+
+def test_Polynom_sum0():
+    poli1 = Polynominal([(0, 2), (5, 2), (4, 3)])
+    poli2 = Polynominal([(0, 7), (7, 6), (4, 3)])
+    poli1.subtract(poli2)
+    assert poli1 == Polynominal([(0, -5), (7, -6), (5, 2)])
+
+
+def test_Polynom_sum1():
+    poli1 = Polynominal([(0, 2), (5, 2), (4, 3)])
+    poli2 = Polynominal([(0, 7), (7, 6), (4, 3)])
+    poli1.add(poli2)
+    assert poli1 == Polynominal([(0, 9), (7, 6), (5, 2), (4, 6)])
+
+
+def test_Polynom_sum2():
+    poli1 = Polynominal()
+    poli2 = Polynominal([(0, 7), (7, 6), (4, 3)])
+    poli1.subtract(poli2)
+    assert poli1 == Polynominal([(0, -7), (7, -6), (4, -3)])
+
+
+def test_Polynom_sum3():
+    poli1 = Polynominal()
+    poli2 = Polynominal([(0, 7), (7, 6), (4, 3)])
+    poli1 = Polynominal()
+    poli1.add(poli2)
+    assert poli1 == Polynominal([(0, 7), (7, 6), (4, 3)])
+
+
+def test_Polynom_sum4():
+    poli1 = Polynominal([(0, 2), (5, 2), (4, 3)])
+    poli2 = Polynominal()
+    # adding and subtracting zero equals itself
+    poli1.subtract(poli2)
+    assert poli1 == Polynominal([(0, 2), (5, 2), (4, 3)])
+
+    poli1 = Polynominal([(0, 2), (5, 2), (4, 3)])
+    poli1.add(poli2)
+    assert poli1 == Polynominal([(0, 2), (5, 2), (4, 3)])

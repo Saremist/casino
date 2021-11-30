@@ -1,13 +1,17 @@
-from _typeshed import Self
-
-
-def add_sign(x):  # returns plus to be written if needed
+def add_sign(x):
+    """
+    returns plus to be written if needed
+    used in _str_
+    """
     if x >= 0:
         return "+"
     return "-"
 
 
 def abs_not_one(x):
+    """
+    used in turning polynominal into _str_
+    """
     a_x = abs(x)  # abs value of x
     if a_x == 1:
         return ""
@@ -17,33 +21,50 @@ def abs_not_one(x):
 
 def validate_input(list_to_be_checked):
     for single_power in list_to_be_checked:
-        for element in single_power:
-            if not isinstance(element, int):
-                raise TypeError("input value is not int type")
+        val = single_power[1]
+        degree = single_power[0]
+        if not isinstance(val, (int, float)):
+            raise TypeError("input for value is not int or float type")
+        if not isinstance(degree, int):
+            raise TypeError("input for degree is not int type")
+    if list_to_be_checked:
+        transf = transform(list_to_be_checked)
+        if min(transf[0]) < 0:  # checks for negative degriee
+            raise ValueError("given degriee was negative")
+        if 0 in (transf[1]):
+            raise ValueError("given correct degree with 0 value")
 
 
-def transform(powers):
-    # returns transformed list in top down organization
+def transform(terms):
+    """
+    returns transformed list in top down organization
+    """
     degrees = []
     values = []
-    for pair in powers:
+    for pair in terms:
         degrees.append(pair[0])
         values.append(pair[1])
     return (degrees, values)
 
 
 class Polynominal:
-    def __init__(self, all_powers=[]):
+    def __init__(self, all_powers=None):
+        if not all_powers:
+            all_powers = []
         validate_input(all_powers)
-        self._powers = sorted(all_powers, key=lambda tup: tup[0], reverse=True)
-        self.transformed = transform(self._powers)
-        if self._powers:
-            if min(self.transformed[0]) < 0:  # checks for negative degriee
-                raise ValueError("given degriee was negative")
-            if 0 in (self.transformed[1]):
-                raise ValueError("given correct degree with 0 value")
+        self._powers = []
+        for element in sorted(all_powers, key=lambda tup: tup[0], reverse=True):
+            self._powers.append(list(element))
+        print(list(zip(*self._powers)))
+        self._transformed = transform(self._powers)
+        print(self._transformed)
 
-    def _str_(self):
+    def __eq__(self, other):
+        if self._powers == other._powers:
+            return True
+        return False
+
+    def __str__(self):
         name = ""
         for power in self._powers:
             if abs(power[0]) == 0:
@@ -54,32 +75,67 @@ class Polynominal:
                 name += f"{add_sign(power[1])}{abs_not_one(power[1])}x^{power[0]}"
         if name == "":
             name = "0"
-        return name.strip("+")  # returns str polynominal description
+        return str(name.strip("+"))  # returns str polynominal description
 
     def degree(self):
         max_degree = 0
-        max_degree = max(0, (max(self.transformed[0])))
+        max_degree = max(0, (max(self._transformed[0])))
         # max_degree = max(0, max(self.transformed))
         return max_degree
 
     def coefficient(self, degre_to_find):
-        index = self.transformed[0].index(degre_to_find)
-        return self.transformed[1][index]
+        """
+        returns value of coefficient standing next to chosen degre
+        """
+        index = self._transformed[0].index(degre_to_find)
+        return self._transformed[1][index]
         # returns coefficient standing by chosen degree
 
     def value(self, x):
+        """
+        returns calculatef value of polynom for chosen X
+        """
         sum_value = 0
-        for degree, value in self.transformed:
-            sum_value += x ^ degree * value  # calculates value for chosen x
+        for power in self._powers:
+            sum_value += (x ** power[0]) * power[1]  # calculates value for chosen x
         return sum_value
 
-    def add(self):
-        pass  # returns sum of 2 polynominals
+    def add(self, polynom):
+        """
+        ads in place 2 polynominals
+        """
+        for element in polynom._powers:
+            power, val = element
+            # if element power is already in our polynominal
+            if power in self._transformed[0]:
+                index = self._transformed[0].index(power)
+                self._powers[index][1] += val
+            else:
+                self._powers.append([power, val])
+                self._powers.sort(reverse=True)
+            # remakes transformed list including new values
+            for id, power in enumerate(self._powers):
+                if power[1] == 0:
+                    self._powers.pop(id)
+            self._transformed = transform(self._powers)
 
-    def subtract(self):
-        pass  # returns diff of 2 polynominals
+    def subtract(self, polynom):
+        """
+        subtracts in place 2 polynominals
+        uses negation of polynom and .add()
+        """
+        negated_polynom = []
+        if polynom:
+            for element in polynom._powers:
+                negated_polynom.append((element[0], -1 * element[1]))
+        polynom._powers = negated_polynom
+        self.add(polynom)
 
 
 if __name__ == "__main__":
-    print(Polynominal([(1, 5), (3, 2), (5, -1)])._str_())
+    my_poly = Polynominal([(0, 2), (5, 2), (4, 3)])
+    to_add = Polynominal()
+    my_poly.subtract(to_add)
+    print(str(my_poly))
+    print(my_poly == Polynominal([(0, 2), (5, 2), (4, 3)]))
     pass
