@@ -53,12 +53,15 @@ def test_Polynominal_deg_normal_3():
     assert (Polynominal([(0, 2)]).degree()) == 0
 
 
-def test_Polynominal_value():
+def test_Polynominal_value1():
     assert (Polynominal([(0, 2), (5, 2), (4, 3)]).value(10)) == 30502
     assert (Polynominal([(0, 2), (5, 2), (4, 3)]).value(5)) == 2002
     assert (Polynominal([(0, 2), (5, 2), (4, 3)]).value(2)) == 70
     assert (Polynominal([(0, 2), (5, 2), (4, 3)]).value(1)) == 10
     assert (Polynominal([(0, 2), (5, 2), (4, 3)]).value(0)) == 2
+
+
+def test_Polynominal_value2():
     assert (Polynominal([(0, 2), (5, 2), (4, 3)]).value(-1)) == 10
     assert (Polynominal([(0, 2), (2, 5), (4, 3)]).value(-5)) == 2002
     assert (Polynominal([(0, 2), (3, 5), (6, 3)]).value(5)) == 47502
