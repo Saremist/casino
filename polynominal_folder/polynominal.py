@@ -1,3 +1,6 @@
+from _typeshed import Self
+
+
 def add_sign(x):  # returns plus to be written if needed
     if x >= 0:
         return "+"
@@ -15,7 +18,7 @@ def abs_not_one(x):
 def validate_input(list_to_be_checked):
     for single_power in list_to_be_checked:
         for element in single_power:
-            if type(element) != int:
+            if not isinstance(element, int):
                 raise TypeError("input value is not int type")
 
 
@@ -60,15 +63,20 @@ class Polynominal:
         return max_degree
 
     def coefficient(self, degre_to_find):
-        pass  # returns coefficient standing by chosen degree
+        index = self.transformed[0].index(degre_to_find)
+        return self.transformed[1][index]
+        # returns coefficient standing by chosen degree
 
-    def value(x):
-        pass  # calculates value for chosen x
+    def value(self, x):
+        sum_value = 0
+        for degree, value in self.transformed:
+            sum_value += x ^ degree * value  # calculates value for chosen x
+        return sum_value
 
-    def add():
+    def add(self):
         pass  # returns sum of 2 polynominals
 
-    def subtract():
+    def subtract(self):
         pass  # returns diff of 2 polynominals
 
 
