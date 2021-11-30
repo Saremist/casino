@@ -8,6 +8,11 @@ def add_sign(x):
     return "-"
 
 
+def validate_for_add(polynom):
+    if not isinstance(polynom, Polynominal):
+        raise TypeError("trying to add not polynominal")
+
+
 def abs_not_one(x):
     """
     used in turning polynominal into _str_
@@ -39,15 +44,27 @@ def transform(terms):
     """
     returns transformed list in top down organization
     """
-    degrees = []
-    values = []
-    for pair in terms:
-        degrees.append(pair[0])
-        values.append(pair[1])
-    return (degrees, values)
+    if not terms:
+        return [[], []]  # protects from empty input polynominal
+    return list(map(list, zip(*terms)))
 
 
 class Polynominal:
+    """
+    Polynominal object described by ax^n + bx^m + [...] + c
+    a is float and n is int type
+
+    __init__(self, all_powers) all_powers is formated as follows:
+            [(n,a), (m,b), ..., (0, c)]
+
+    Methods included:
+        degree(self)
+        coefficient(self, degre_to_find)
+        value(self, x)
+        add(self, polynom)
+        subtract(self, polynom)
+    """
+
     def __init__(self, all_powers=None):
         if not all_powers:
             all_powers = []
@@ -55,16 +72,20 @@ class Polynominal:
         self._powers = []
         for element in sorted(all_powers, key=lambda tup: tup[0], reverse=True):
             self._powers.append(list(element))
-        print(list(zip(*self._powers)))
         self._transformed = transform(self._powers)
-        print(self._transformed)
 
     def __eq__(self, other):
+        """
+        polynominals are equal if all coefficients and values are equal
+        """
         if self._powers == other._powers:
             return True
         return False
 
     def __str__(self):
+        """
+        creates matematical string of polynominal
+        """
         name = ""
         for power in self._powers:
             if abs(power[0]) == 0:
@@ -78,16 +99,24 @@ class Polynominal:
         return str(name.strip("+"))  # returns str polynominal description
 
     def degree(self):
+        """
+        returns max degree (degree of whole polyniminal)
+        """
         max_degree = 0
-        max_degree = max(0, (max(self._transformed[0])))
-        # max_degree = max(0, max(self.transformed))
-        return max_degree
+        if not self._transformed[0] == []:
+            max_degree = max(0, (max(self._transformed[0])))
+            return max_degree
+        else:
+            return 0
 
     def coefficient(self, degre_to_find):
         """
         returns value of coefficient standing next to chosen degre
         """
-        index = self._transformed[0].index(degre_to_find)
+        try:
+            index = self._transformed[0].index(degre_to_find)
+        except ValueError:
+            return 0
         return self._transformed[1][index]
         # returns coefficient standing by chosen degree
 
@@ -104,6 +133,7 @@ class Polynominal:
         """
         ads in place 2 polynominals
         """
+        validate_for_add(polynom)
         for element in polynom._powers:
             power, val = element
             # if element power is already in our polynominal
@@ -124,6 +154,7 @@ class Polynominal:
         subtracts in place 2 polynominals
         uses negation of polynom and .add()
         """
+        validate_for_add(polynom)
         negated_polynom = []
         if polynom:
             for element in polynom._powers:
