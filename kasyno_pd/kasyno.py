@@ -49,6 +49,10 @@ class Casino:
             round_points.append(player._points)
         self.winning_points = max(round_points)
 
+    def roll_player_dices(self):
+        for player in self.players_inside:
+            player.throw_dice()
+
     def select_winner(self):
         """logick behind selecting a winner
         sets winner to none and returns it to stop shearching for a winner
@@ -70,6 +74,7 @@ class Casino:
         This metod plays a round of dice and returns winner of the round
         Each player has his own dices saved in Player.dice_dict
         """
+        self.roll_player_dices()
         self.get_winning_points()
         self.select_winner()
         return self.winner
@@ -112,7 +117,6 @@ class Player:
         sets and returns self._points being maximum of above rules
         """
         points = []
-        self.throw_dice()
         points.append(self.points_only_even())
         points.append(self.points_only_odd())
         for number_on_dice in range(1, 7):  # check fo prair triples and qarets

@@ -171,3 +171,38 @@ def test_Casino_kick_error():
     Vegas = Casino([Player()])
     with pytest.raises(ValueError):
         Vegas.kick_players([Player()])
+
+
+def test_Player_roll_dice(monkeypatch):
+    monkeypatch.setattr("kasyno.randint", smart_mock(1))
+    Ala = Player("Ala")
+    assert Ala.roll_dice() == {1: 4, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0}
+
+
+def test_Player_throw_dice(monkeypatch):
+    monkeypatch.setattr("kasyno.randint", smart_mock(5))
+    Ala = Player("Ala")
+    Ala.throw_dice()
+    Ala.dice_dict == {1: 0, 2: 0, 3: 0, 4: 0, 5: 4, 6: 0}
+
+
+def test_casino_round2(monkeypatch):
+    player1 = Player("Alan")
+    player2 = Player("Bartek")
+    player3 = Player("Kasia")
+
+    def mock_roll(self):
+        rolls_dict = {
+            player1: {1: 2, 2: 0, 3: 1, 4: 0, 5: 1, 6: 0},
+            player2: {1: 0, 2: 2, 3: 0, 4: 1, 5: 0, 6: 1},
+            player3: {1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 4},
+        }
+        return rolls_dict[self]
+
+    monkeypatch.setattr("kasyno.Player.roll_dice", mock_roll)
+
+    Vegas = Casino([player1, player2, player3])
+    assert Vegas.round() == player3
+    assert player1._points == 13
+    assert player2._points == 16
+    assert player3._points == 36
