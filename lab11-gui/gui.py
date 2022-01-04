@@ -1,12 +1,13 @@
 from PySide2.QtWidgets import QApplication
+
 # from PySide2.QtWidgets import QHBoxLayout, QVBoxLayout
-from PySide2.QtWidgets import QMainWindow#, QWidget
+from PySide2.QtWidgets import QMainWindow  # , QWidget
 import sys
 from ui_airquality import Ui_MainWindow
 
 
 class AirQualityWindow(QMainWindow):
-    def init(self, parent=None):
+    def __init__(self, parent=None):
         super().__init__(parent)
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
