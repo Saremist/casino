@@ -1,25 +1,20 @@
-from PySide2.QtWidgets import QApplication, QWidget, QPushButton, QLineEdit, QSlider, QSpinBox
-from PySide2.QtWidgets import QHBoxLayout, QVBoxLayout
+from PySide2.QtWidgets import QApplication
+# from PySide2.QtWidgets import QHBoxLayout, QVBoxLayout
+from PySide2.QtWidgets import QMainWindow#, QWidget
 import sys
+from ui_airquality import Ui_MainWindow
+
+
+class AirQualityWindow(QMainWindow):
+    def init(self, parent=None):
+        super().__init__(parent)
+        self.ui = Ui_MainWindow()
+        self.ui.setupUi(self)
 
 
 def guiMain(args):
-    app = QApplication([])
-    window = QWidget()
-    slider = QSlider()
-    spinbox = QSpinBox()
-    layout = QVBoxLayout(window)
-    layout.addWidget(slider)
-    layout.addWidget(spinbox)
-    
-    def updateSpinbox(val):
-        spinbox.setValue(val)
-
-    def updateSlider(val):
-        slider.setValue(val)
-
-    slider.valueChanged.connect(updateSpinbox)
-    spinbox.valueChanged.connect(updateSlider)
+    app = QApplication(args)
+    window = AirQualityWindow()
     window.show()
     return app.exec_()
 

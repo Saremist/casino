@@ -17,21 +17,37 @@ class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
-        MainWindow.resize(800, 600)
+        MainWindow.resize(474, 402)
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
-        self.stackedWidget = QStackedWidget(self.centralwidget)
-        self.stackedWidget.setObjectName(u"stackedWidget")
-        self.stackedWidget.setGeometry(QRect(379, 29, 361, 541))
+        self.verticalLayout = QVBoxLayout(self.centralwidget)
+        self.verticalLayout.setObjectName(u"verticalLayout")
+        self.splitter = QSplitter(self.centralwidget)
+        self.splitter.setObjectName(u"splitter")
+        self.splitter.setOrientation(Qt.Horizontal)
+        self.stations = QListWidget(self.splitter)
+        self.stations.setObjectName(u"stations")
+        self.splitter.addWidget(self.stations)
+        self.stack = QStackedWidget(self.splitter)
+        self.stack.setObjectName(u"stack")
         self.page = QWidget()
         self.page.setObjectName(u"page")
-        self.stackedWidget.addWidget(self.page)
+        self.verticalLayout_2 = QVBoxLayout(self.page)
+        self.verticalLayout_2.setObjectName(u"verticalLayout_2")
+        self.label = QLabel(self.page)
+        self.label.setObjectName(u"label")
+        self.label.setAlignment(Qt.AlignCenter)
+
+        self.verticalLayout_2.addWidget(self.label)
+
+        self.stack.addWidget(self.page)
         self.page_2 = QWidget()
         self.page_2.setObjectName(u"page_2")
-        self.stackedWidget.addWidget(self.page_2)
-        self.listWidget = QListWidget(self.centralwidget)
-        self.listWidget.setObjectName(u"listWidget")
-        self.listWidget.setGeometry(QRect(0, 0, 381, 571))
+        self.stack.addWidget(self.page_2)
+        self.splitter.addWidget(self.stack)
+
+        self.verticalLayout.addWidget(self.splitter)
+
         MainWindow.setCentralWidget(self.centralwidget)
         self.statusbar = QStatusBar(MainWindow)
         self.statusbar.setObjectName(u"statusbar")
@@ -39,10 +55,14 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
 
+        self.stack.setCurrentIndex(0)
+
+
         QMetaObject.connectSlotsByName(MainWindow)
     # setupUi
 
     def retranslateUi(self, MainWindow):
         MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"AIR QUALITY", None))
+        self.label.setText(QCoreApplication.translate("MainWindow", u"Choose station first", None))
     # retranslateUi
 
